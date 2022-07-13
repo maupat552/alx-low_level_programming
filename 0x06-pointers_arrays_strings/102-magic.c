@@ -1,5 +1,12 @@
-#include "main.h"
 #include <stdio.h>
+
+/**
+ *main - Entry point
+ *
+ *Description: 'the function that prints a buffer'
+ *
+ *Return: Always 0 (Success)
+ */
 
 int main(void)
 {
