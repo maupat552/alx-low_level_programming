@@ -1,39 +1,61 @@
+#include "main.h"
+#include <stdio.h>
 #include <stdlib.h>
 /**
- * string_nconcat - concatenates two strings, up to n bytes of s2
+ * _strlen - string len
+ * @s: string
  *
- * @s1: string 1 to concatenate with string 2
- * @s2: string 2 to concatenate with string 1
- * @n: number of bytes to concatenate of s2
+ * Return: int len
+ */
+int _strlen(char *s)
+{
+	int i = 0;
+
+	while (s[i] != '\0')
+		i++;
+
+	return (i);
+}
+/**
+ * string_nconcat - concatenates string s1 with nth of s2
+ * @s1: string 1
+ * @s2: string 2
+ * @n: size to take from s2
  *
- * Return: pointer to new string, or NULL on failure
+ * Return: poiter to new string
  */
 char *string_nconcat(char *s1, char *s2, unsigned int n)
 {
-	unsigned int s1Size = 0, s2Size = 0, i = 0;
-	char *conc, *concStart;
+	char *a;
+	unsigned int s1Len, s2Len;
+	unsigned int i, I;
+	char nul = '\0';
+	int tots;
 
 	if (s1 == NULL)
-		s1 = "";
+		s1 = &nul;
 	if (s2 == NULL)
-		s2 = "";
-	while (*(s1 + s1Size))
-		s1Size++;
-	while (*(s2 + s2Size))
-		s2Size++;
-	if (n > s2Size)
-		n = s2Size;
-	conc = malloc(sizeof(char) * (s1Size + s2Size + 1));
-	if (conc == NULL)
+		s2 = &nul;
+
+	s1Len = _strlen(s1);
+	s2Len = _strlen(s2);
+
+	if (n >= s2Len)
+		tots = s2Len + s1Len;
+	else
+		tots = s1Len + n;
+
+	a = malloc(tots + 1);
+	if (a == NULL)
 		return (NULL);
-	concStart = conc;
-	while (*s1)
-		*conc++ = *s1++;
-	while (i < n)
-	{
-		*conc++ = *s2++;
-		i++;
-	}
-	*conc = '\0';
-	return (concStart);
+
+	i = 0, I = 0;
+	while (s1[i] != '\0')
+		a[I++] = s1[i++];
+	i = 0;
+	while (s2[i] != '\0' && n-- != 0)
+		a[I++] = s2[i++];
+	a[I] = '\0';
+
+	return (a);
 }
