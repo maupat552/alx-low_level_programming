@@ -1,36 +1,34 @@
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/uio.h>
-#include <unistd.h>
-#include <fcntl.h>
+#include "main.h"
 
 /**
- * append_text_to_file - appends text to a file
- * @filename: the filename to open and append to
- * @text_content: text to append onto new file
- *
- * Return: 1 on success, -1 on failure (file can not be created, or written,
- * or write fails, etc).
+ * create_file - creates a file
+ * @filename: path of file
+ * @text_content: content to be write on new file or truncated on existing
+ * Return: 1 on Success, -1 on failure
  */
-int append_text_to_file(const char *filename, char *text_content)
+int create_file(const char *filename, char *text_content)
 {
-	int fd, err, len;
+	int count, len = 0, fd;
 
-	if (!filename)
+	if (filename == NULL)
 		return (-1);
-	fd = open(filename, O_RDWR | O_APPEND);
-	if (fd < 0) /* failed opening file */
+
+	/* Open file and get file descriptor */
+	fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0600);
+	if (fd == -1)
 		return (-1);
-	if (!text_content)
-	{ /* there is a file, but no new content to write to it */
-		close(fd);
-		return (1);
+	if (text_content != NULL)
+	{
+		while (text_content[len])
+			len++;
 	}
-	while (*(text_content + len))
-		len++;
-	err = write(fd, text_content, len);
-	close(fd);
-	if (err < 0)
+	/* write into file description */
+	count = write(fd, text_content, len);
+	if (count == -1)
+	{
+		close(fd);
 		return (-1);
+	}
+	close(fd);
 	return (1);
-}
+
