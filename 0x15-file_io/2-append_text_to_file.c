@@ -1,36 +1,39 @@
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/uio.h>
-#include <unistd.h>
-#include <fcntl.h>
-
+#include "main.h"
 /**
- * append_text_to_file - appends text to a file
- * @filename: the filename to open and append to
- * @text_content: text to append onto new file
- *
- * Return: 1 on success, -1 on failure (file can not be created, or written,
- * or write fails, etc).
+ * append_text_to_file - Entry Point
+ * @filename: file name
+ * @text_content: text content
+ * Return: 1
  */
 int append_text_to_file(const char *filename, char *text_content)
 {
-	int fd, err, len;
+	int file, wr, i = 0;
 
-	if (!filename)
+	if (filename == NULL)
 		return (-1);
-	fd = open(filename, O_RDWR | O_APPEND);
-	if (fd < 0) /* failed opening file */
+
+	file = open(filename, O_RDWR | O_APPEND);
+	if (file == -1)
 		return (-1);
-	if (!text_content)
-	{ /* there is a file, but no new content to write to it */
-		close(fd);
+
+
+
+	while (text_content[i])
+		i++;
+
+	if (text_content == NULL)
+	{
+		close(file);
 		return (1);
 	}
-	while (*(text_content + len))
-		len++;
-	err = write(fd, text_content, len);
-	close(fd);
-	if (err < 0)
+	else
+	{
+		wr = write(file, text_content, i);
+	}
+
+	if (wr == -1)
 		return (-1);
+
+	close(file);
 	return (1);
 }
